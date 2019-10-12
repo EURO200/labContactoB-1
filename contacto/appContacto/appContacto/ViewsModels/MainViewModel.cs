@@ -1,11 +1,23 @@
-﻿namespace appContacto.ViewsModels
+﻿using appContacto.Models;
+using System.Collections.Generic;
+
+namespace appContacto.ViewsModels
 {
     public class MainViewModel
     {
+        #region Properties
+        public List<Contact> ContactList { get; set; }
+        #endregion
+
+        #region ViewModel
+        public ContacViewModel contacViewModel { get; set; }
+        #endregion
+
         #region Constructor
         public MainViewModel()
         {
             instance = this;
+            this.contacViewModel = new ContacViewModel();
         }
         #endregion
 
