@@ -1,42 +1,37 @@
-﻿
-
-namespace appContacto.ViewsModels
+﻿namespace appContacto.ViewModels
 {
-    using appContacto.Models;
-    using appContacto.Services;
-    using System;
+    using appContacto.ViewsModels;
+    using Models;
+    using Services;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using Xamarin.Forms;
-
-    public class ContacViewModel:BaseViewModel
+    public class ContactViewModel : BaseViewModel
     {
         #region Attributes
-        ApiService apiService;
+        private ApiService apiService;
         private ObservableCollection<Contact> contacts;
-        #endregion
-
+        #endregion        
         #region Properties
         public ObservableCollection<Contact> Contacts
         {
             get { return this.contacts; }
             set { SetValue(ref this.contacts, value); }
         }
-        #endregion
+        #endregion 
 
         #region Constructor
-        public  ContacViewModel()
+        public ContactViewModel()
         {
             this.apiService = new ApiService();
             this.LoadContacts();
         }
-        #endregion
-
+        #endregion       
         #region Methods
         private async void LoadContacts()
         {
             var connection = await this.apiService.CheckConnection();
-            if(!connection.IsSuccess)
+            if (!connection.IsSuccess)
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "Connection Error",
@@ -46,24 +41,37 @@ namespace appContacto.ViewsModels
                 return;
             }
             var response = await this.apiService.GetList<Contact>(
-                "http://localhost:50048/",
-                "api/",
-                "api/Contacts");
+           "http://localhost:50048/",
+           "api/",
+           "Contacts");
             if (!response.IsSuccess)
             {
                 await Application.Current.MainPage.DisplayAlert(
-                    "Get Contact Error",
+                    "GET Contact Error",
                     response.Message,
                     "Accept"
                     );
                 return;
             }
-
             MainViewModel mainViewModel = MainViewModel.GetInstance();
-            mainViewModel.ContactList = (List<Contact>)response.Result;
-            //this.Contacts = new ObservableCollection<Contact>(this.);
+            mainViewModel.ContactList = (List<Contact>)response.Result; this.Contacts = new ObservableCollection<Contact>(this.ToContactView());
+        }
+        private IEnumerable<Contact> ToContactView()
+        {
+            ObservableCollection<Contact> collection = new ObservableCollection<Contact>();
+            MainViewModel main = MainViewModel.GetInstance();
+            foreach (var lista in main.ContactList)
+            {
+                Contact contacto = new Contact();
+                contacto.ContactID = lista.ContactID;
+                contacto.Name = lista.Name;
+                contacto.Type = lista.Type;
+                contacto.ContactValue = lista.ContactValue;
+                collection.Add(contacto);
+            }
+            return collection;
         }
         #endregion
-
     }
 }
+    

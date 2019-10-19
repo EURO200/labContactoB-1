@@ -1,4 +1,5 @@
 ﻿using appContacto.Models;
+using appContacto.ViewModels;
 using System.Collections.Generic;
 
 namespace appContacto.ViewsModels
@@ -10,14 +11,14 @@ namespace appContacto.ViewsModels
         #endregion
 
         #region ViewModel
-        public ContacViewModel contacViewModel { get; set; }
+        public ContactViewModel contacViewModel { get; set; }
         #endregion
 
         #region Constructor
         public MainViewModel()
         {
             instance = this;
-            this.contacViewModel = new ContacViewModel();
+            this.contacViewModel = new ContactViewModel();
         }
         #endregion
 
